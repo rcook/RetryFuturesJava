@@ -25,7 +25,7 @@ public final class JavaFutures {
     private static Session getSession(final int index) {
         if (index != 123) {
             System.out.format("[%d] getSession failed%n", Thread.currentThread().getId());
-            throw new RuntimeException("<invalid-token-version>");
+            throw new RuntimeException("<invalid-index>");
         }
 
         System.out.format("[%d] getSession succeeded%n", Thread.currentThread().getId());
