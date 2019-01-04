@@ -4,10 +4,11 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.rcook.guava.GuavaFutures;
 import org.rcook.java.JavaFutures;
+import org.rcook.java.JavaFuturesWithIntermediateUnionType;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -31,8 +32,20 @@ public final class Main {
         }
 
         {
+            JavaFuturesWithIntermediateUnionType.add(5, 6).handle((value, e) -> {
+                if (e == null) {
+                    System.out.format("value=%d%n", value);
+                } else {
+                    System.out.format("e=%s%n", e);
+                }
+
+                return CompletableFuture.allOf();
+            }).join();
+        }
+
+        {
             final ListenableFuture<Integer> future = GuavaFutures.add(5, 6);
-            Futures.addCallback(future, new FutureCallback<>() {
+            Futures.addCallback(future, new FutureCallback<Integer>() {
                 @Override
                 public void onSuccess(@Nullable final Integer value) {
                     System.out.format("value=%d%n", value);
