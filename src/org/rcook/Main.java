@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
+import org.rcook.guava.GuavaFluentFutures;
 import org.rcook.guava.GuavaFutures;
 import org.rcook.java.JavaFutures;
 import org.rcook.java.JavaFuturesWithIntermediateUnionType;
@@ -45,6 +46,22 @@ public final class Main {
 
         {
             final ListenableFuture<Integer> future = GuavaFutures.add(5, 6);
+            Futures.addCallback(future, new FutureCallback<Integer>() {
+                @Override
+                public void onSuccess(@Nullable final Integer value) {
+                    System.out.format("value=%d%n", value);
+                }
+
+                @Override
+                public void onFailure(final Throwable e) {
+                    System.out.format("e=%s%n", e);
+                }
+            }, MoreExecutors.directExecutor());
+            assertGetSucceeds(future);
+        }
+
+        {
+            final ListenableFuture<Integer> future = GuavaFluentFutures.add(5, 6);
             Futures.addCallback(future, new FutureCallback<Integer>() {
                 @Override
                 public void onSuccess(@Nullable final Integer value) {
