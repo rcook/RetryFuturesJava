@@ -5,46 +5,48 @@ import org.rcook.Session;
 
 import java.util.concurrent.CompletableFuture;
 
-enum ValueOrExceptionType {
+enum EitherType {
     VALUE,
-    EXCEPTION
+    THROWN
 }
 
-final class ValueOrException<V> {
-    private final ValueOrExceptionType type;
+final class Either<V> {
+    private final EitherType type;
     private final V value;
-    private final Throwable exception;
+    private final Throwable thrown;
 
-    public ValueOrException(final V value) {
-        this.type = ValueOrExceptionType.VALUE;
+    private Either(final EitherType type, final V value, final Throwable thrown) {
+        this.type = type;
         this.value = value;
-        this.exception = null;
+        this.thrown = thrown;
     }
 
-    public ValueOrException(final Throwable exception) {
-        this.type = ValueOrExceptionType.EXCEPTION;
-        this.value = null;
-        this.exception = exception;
+    public static <U> Either<U> ofValue(final U value) {
+        return new Either<>(EitherType.VALUE, value, null);
     }
 
-    public ValueOrExceptionType getType() {
+    public static <U> Either<U> ofThrown(final Throwable thrown) {
+        return new Either<>(EitherType.THROWN, null, thrown);
+    }
+
+    public EitherType getType() {
         return type;
     }
 
     public V getValue() {
-        if (type != ValueOrExceptionType.VALUE) {
+        if (type != EitherType.VALUE) {
             throw new IllegalStateException();
         }
 
         return value;
     }
 
-    public Throwable getException() {
-        if (type != ValueOrExceptionType.EXCEPTION) {
+    public Throwable getThrown() {
+        if (type != EitherType.THROWN) {
             throw new IllegalStateException();
         }
 
-        return exception;
+        return thrown;
     }
 }
 
@@ -54,15 +56,15 @@ public final class JavaFuturesWithIntermediateUnionType {
 
     public static CompletableFuture<Integer> add(final int x, final int y) {
         return App.addAsync_Java(Session.INVALID, x, y)
-                .thenApply(ValueOrException::new)
-                .exceptionally(ValueOrException::new) // How to propagate cancellation?
-                .thenCompose(valueOrException -> valueOrException.getType() == ValueOrExceptionType.EXCEPTION
+                .thenApply(Either::ofValue)
+                .exceptionally(Either::ofThrown) // How to propagate cancellation?
+                .thenCompose(e -> e.getType() == EitherType.THROWN
                         ?
                         App.getSessionIdAsync_Java(Session.INVALID)
                                 .thenApply(Integer::parseInt)
                                 .thenApply(Session::fromIndex)
                                 .thenCompose(session -> App.addAsync_Java(session, x, y))
                         :
-                        CompletableFuture.completedFuture(valueOrException.getValue()));
+                        CompletableFuture.completedFuture(e.getValue()));
     }
 }
