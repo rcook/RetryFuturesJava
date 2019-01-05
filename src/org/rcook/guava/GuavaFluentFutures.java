@@ -15,14 +15,14 @@ public final class GuavaFluentFutures {
     public static ListenableFuture<Integer> add(final int x, final int y) {
         final Executor executor = MoreExecutors.directExecutor();
         return FluentFuture
-                .from(App.add2(Session.INVALID, x, y))
+                .from(App.addAsync_Guava(Session.INVALID, x, y))
                 .catchingAsync(
                         RuntimeException.class,
                         e -> FluentFuture
-                                .from(App.getSessionId2(Session.INVALID))
+                                .from(App.getSessionIdAsync_Guava(Session.INVALID))
                                 .transform(Integer::parseInt, executor)
                                 .transform(Session::fromIndex, executor)
-                                .transformAsync(session -> App.add2(session, x, y), executor),
+                                .transformAsync(session -> App.addAsync_Guava(session, x, y), executor),
                         executor);
     }
 }

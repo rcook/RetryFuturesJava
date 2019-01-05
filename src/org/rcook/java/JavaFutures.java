@@ -10,14 +10,14 @@ public final class JavaFutures {
     }
 
     public static CompletableFuture<Integer> add(final int x, final int y) {
-        return App.add(Session.INVALID, x, y)
+        return App.addAsync_Java(Session.INVALID, x, y)
                 .exceptionally(e -> null)
                 .thenCompose(response -> response == null
                         ?
-                        App.getSessionId(Session.INVALID)
+                        App.getSessionIdAsync_Java(Session.INVALID)
                                 .thenApply(Integer::parseInt)
                                 .thenApply(Session::fromIndex)
-                                .thenCompose(session -> App.add(session, x, y))
+                                .thenCompose(session -> App.addAsync_Java(session, x, y))
                         :
                         CompletableFuture.completedFuture(response));
     }

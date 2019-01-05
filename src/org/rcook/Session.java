@@ -12,11 +12,11 @@ public enum Session {
 
     public static Session fromIndex(final int index) {
         if (index != 123) {
-            System.out.format("[%d] getSession failed%n", Thread.currentThread().getId());
+            System.out.format("[%d] fromIndex failed%n", Thread.currentThread().getId());
             throw new RuntimeException("<invalid-index>");
         }
 
-        System.out.format("[%d] getSession succeeded%n", Thread.currentThread().getId());
+        System.out.format("[%d] fromIndex succeeded%n", Thread.currentThread().getId());
         return Session.VALID;
     }
 

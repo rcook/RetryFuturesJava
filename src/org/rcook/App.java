@@ -12,39 +12,39 @@ public final class App {
     private App() {
     }
 
-    public static CompletableFuture<Integer> add(final Session session, final int x, final int y) {
-        return CompletableFuture.supplyAsync(() -> addSync(session, x, y));
+    public static CompletableFuture<Integer> addAsync_Java(final Session session, final int x, final int y) {
+        return CompletableFuture.supplyAsync(() -> add(session, x, y));
     }
 
-    public static ListenableFuture<Integer> add2(final Session session, final int x, final int y) {
-        return EXECUTOR_SERVICE.submit(() -> addSync(session, x, y));
+    public static ListenableFuture<Integer> addAsync_Guava(final Session session, final int x, final int y) {
+        return EXECUTOR_SERVICE.submit(() -> add(session, x, y));
     }
 
-    public static CompletableFuture<String> getSessionId(final Session session) {
-        return CompletableFuture.supplyAsync(() -> getSessionIdSync(session));
+    public static CompletableFuture<String> getSessionIdAsync_Java(final Session session) {
+        return CompletableFuture.supplyAsync(() -> getSessionId(session));
     }
 
-    public static ListenableFuture<String> getSessionId2(final Session session) {
-        return EXECUTOR_SERVICE.submit(() -> getSessionIdSync(session));
+    public static ListenableFuture<String> getSessionIdAsync_Guava(final Session session) {
+        return EXECUTOR_SERVICE.submit(() -> getSessionId(session));
     }
 
-    private static Integer addSync(final Session session, final int x, final int y) {
+    private static Integer add(final Session session, final int x, final int y) {
         if (!session.isValid()) {
-            System.out.format("[%d] addSync failed%n", Thread.currentThread().getId());
+            System.out.format("[%d] add failed%n", Thread.currentThread().getId());
             throw new RuntimeException("<invalid-session>");
         }
 
-        System.out.format("[%d] addSync succeeded%n", Thread.currentThread().getId());
+        System.out.format("[%d] add succeeded%n", Thread.currentThread().getId());
         return x + y;
     }
 
-    private static String getSessionIdSync(final Session session) {
+    private static String getSessionId(final Session session) {
         if (session.isValid()) {
-            System.out.format("[%d] getSessionIdSync failed%n", Thread.currentThread().getId());
+            System.out.format("[%d] getSessionId failed%n", Thread.currentThread().getId());
             throw new RuntimeException("<invalid-session>");
         }
 
-        System.out.format("[%d] getSessionIdSync succeeded%n", Thread.currentThread().getId());
+        System.out.format("[%d] getSessionId succeeded%n", Thread.currentThread().getId());
         return "123";
     }
 }
