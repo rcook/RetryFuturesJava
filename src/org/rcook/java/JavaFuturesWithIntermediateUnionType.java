@@ -55,7 +55,7 @@ public final class JavaFuturesWithIntermediateUnionType {
     public static CompletableFuture<Integer> add(final int x, final int y) {
         return App.addAsync_Java(Session.INVALID, x, y)
                 .thenApply(ValueOrException::new)
-                .exceptionally(ValueOrException::new)
+                .exceptionally(ValueOrException::new) // How to propagate cancellation?
                 .thenCompose(valueOrException -> valueOrException.getType() == ValueOrExceptionType.EXCEPTION
                         ?
                         App.getSessionIdAsync_Java(Session.INVALID)

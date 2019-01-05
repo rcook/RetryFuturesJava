@@ -11,7 +11,7 @@ public final class JavaFutures {
 
     public static CompletableFuture<Integer> add(final int x, final int y) {
         return App.addAsync_Java(Session.INVALID, x, y)
-                .exceptionally(e -> null)
+                .exceptionally(e -> null) // How to propagate cancellation?
                 .thenCompose(response -> response == null
                         ?
                         App.getSessionIdAsync_Java(Session.INVALID)
