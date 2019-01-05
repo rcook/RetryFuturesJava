@@ -21,18 +21,8 @@ public final class GuavaFluentFutures {
                         e -> FluentFuture
                                 .from(App.getSessionId2(Session.INVALID))
                                 .transform(Integer::parseInt, executor)
-                                .transform(GuavaFluentFutures::getSession, executor)
+                                .transform(Session::fromIndex, executor)
                                 .transformAsync(session -> App.add2(session, x, y), executor),
                         executor);
-    }
-
-    private static Session getSession(final int index) {
-        if (index != 123) {
-            System.out.format("[%d] getSession failed%n", Thread.currentThread().getId());
-            throw new RuntimeException("<invalid-index>");
-        }
-
-        System.out.format("[%d] getSession succeeded%n", Thread.currentThread().getId());
-        return Session.VALID;
     }
 }

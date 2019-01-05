@@ -16,19 +16,9 @@ public final class JavaFutures {
                         ?
                         App.getSessionId(Session.INVALID)
                                 .thenApply(Integer::parseInt)
-                                .thenApply(JavaFutures::getSession)
+                                .thenApply(Session::fromIndex)
                                 .thenCompose(session -> App.add(session, x, y))
                         :
                         CompletableFuture.completedFuture(response));
-    }
-
-    private static Session getSession(final int index) {
-        if (index != 123) {
-            System.out.format("[%d] getSession failed%n", Thread.currentThread().getId());
-            throw new RuntimeException("<invalid-index>");
-        }
-
-        System.out.format("[%d] getSession succeeded%n", Thread.currentThread().getId());
-        return Session.VALID;
     }
 }

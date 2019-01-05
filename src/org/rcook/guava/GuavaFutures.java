@@ -20,17 +20,7 @@ public final class GuavaFutures {
                                         h.transform(
                                                 App.getSessionId2(Session.INVALID),
                                                 Integer::parseInt),
-                                        GuavaFutures::getSession),
+                                        Session::fromIndex),
                                 session -> App.add2(session, x, y)));
-    }
-
-    private static Session getSession(final int index) {
-        if (index != 123) {
-            System.out.format("[%d] getSession failed%n", Thread.currentThread().getId());
-            throw new RuntimeException("<invalid-index>");
-        }
-
-        System.out.format("[%d] getSession succeeded%n", Thread.currentThread().getId());
-        return Session.VALID;
     }
 }

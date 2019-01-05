@@ -10,6 +10,16 @@ public enum Session {
         this.isValid = isValid;
     }
 
+    public static Session fromIndex(final int index) {
+        if (index != 123) {
+            System.out.format("[%d] getSession failed%n", Thread.currentThread().getId());
+            throw new RuntimeException("<invalid-index>");
+        }
+
+        System.out.format("[%d] getSession succeeded%n", Thread.currentThread().getId());
+        return Session.VALID;
+    }
+
     public boolean isValid() {
         return isValid;
     }
