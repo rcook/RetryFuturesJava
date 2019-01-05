@@ -7,8 +7,8 @@ import org.rcook.Session;
 
 import java.util.concurrent.CompletableFuture;
 
-public final class JavaFuturesWithIntermediateUnionType {
-    private JavaFuturesWithIntermediateUnionType() {
+public final class JavaFuturesWithEither {
+    private JavaFuturesWithEither() {
     }
 
     public static CompletableFuture<Integer> add(final int x, final int y) {

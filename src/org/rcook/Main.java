@@ -7,7 +7,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import org.rcook.guava.GuavaFluentFutures;
 import org.rcook.guava.GuavaFutures;
 import org.rcook.java.JavaFutures;
-import org.rcook.java.JavaFuturesWithIntermediateUnionType;
+import org.rcook.java.JavaFuturesWithEither;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
@@ -33,7 +33,7 @@ public final class Main {
         }
 
         {
-            JavaFuturesWithIntermediateUnionType.add(5, 6).handle((value, e) -> {
+            JavaFuturesWithEither.add(5, 6).handle((value, e) -> {
                 if (e == null) {
                     System.out.format("value=%d%n", value);
                 } else {
