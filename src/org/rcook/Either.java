@@ -16,7 +16,23 @@ public final class Either<V> {
     }
 
     public static <U> Either<U> ofThrown(final Throwable thrown) {
+        if (thrown == null) {
+            throw new IllegalArgumentException();
+        }
+
         return new Either<>(EitherType.THROWN, null, thrown);
+    }
+
+    @Override
+    public String toString() {
+        switch (type) {
+            case VALUE:
+                return String.format("[Value %s]", value);
+            case THROWN:
+                return String.format("[Thrown %s]", thrown);
+            default:
+                throw new IllegalStateException();
+        }
     }
 
     public EitherType getType() {
@@ -24,7 +40,7 @@ public final class Either<V> {
     }
 
     public V getValue() {
-        if (type != EitherType.VALUE) {
+        if (!isValue()) {
             throw new IllegalStateException();
         }
 
@@ -32,10 +48,22 @@ public final class Either<V> {
     }
 
     public Throwable getThrown() {
-        if (type != EitherType.THROWN) {
+        if (!isThrown()) {
             throw new IllegalStateException();
         }
 
         return thrown;
+    }
+
+    public boolean isValue() {
+        return type == EitherType.VALUE;
+    }
+
+    public boolean isThrown() {
+        return type == EitherType.THROWN;
+    }
+
+    public <T> boolean isThrownAssignableTo(final Class<T> cls) {
+        return isThrown() && cls.isAssignableFrom(thrown.getClass());
     }
 }
